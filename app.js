@@ -10,6 +10,7 @@ const fs = require("fs");
 
 const render = require("./lib/htmlRenderer");
 let allEmployee = [""];
+var managerSelect = 0;
 
 function begin() {
   inquirer
@@ -37,7 +38,8 @@ function begin() {
       }
     ])
     .then(function({ name, id, email, role }) {
-      if (role === "Manager") {
+      if (role === "Manager" && managerSelect === 0) {
+        managerSelect = 1;
         inquirer
           .prompt([
             {
@@ -47,6 +49,7 @@ function begin() {
             }
           ])
           .then(function({ OfficeNumber }) {
+            startOver();
             const newManager = new Manager(name, id, email, OfficeNumber);
             return newManager;
             allEmployee.push(newManager);
@@ -61,6 +64,7 @@ function begin() {
             }
           ])
           .then(function({ gitHub }) {
+            startOver();
             const newEngineer = new Engineer(name, id, email, gitHub);
             return newEngineer;
             allEmployee.push(newEngineer);
@@ -75,11 +79,32 @@ function begin() {
             }
           ])
           .then(function({ school }) {
+            startOver();
             const newIntern = new Intern(name, id, email, school);
             return newIntern;
             allEmployee.push(newIntern);
           });
       } else {
+        console.log("You can't anyone right now");
+      }
+    });
+}
+
+function startOver() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "Would you like to add a new employee?",
+        name: "answer",
+        choices: ["Yes", "No"]
+      }
+    ])
+    .then(function({ answer }) {
+      if (answer === "Yes") {
+        begin();
+      } else {
+        console.log("Thank you for using our application");
       }
     });
 }
