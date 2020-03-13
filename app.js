@@ -4,12 +4,13 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+//const render = require("./lib/htmlRenderer");
 
 //const OUTPUT_DIR = path.resolve(__dirname, "output");
 //const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
-let allEmployee = [""];
+let allEmployee = [];
 var managerSelect = 0;
 
 function begin() {
@@ -51,8 +52,8 @@ function begin() {
           .then(function({ OfficeNumber }) {
             startOver();
             const newManager = new Manager(name, id, email, OfficeNumber);
-            return newManager;
             allEmployee.push(newManager);
+            return newManager;
           });
       } else if (role === "Engineer") {
         inquirer
@@ -66,8 +67,8 @@ function begin() {
           .then(function({ gitHub }) {
             startOver();
             const newEngineer = new Engineer(name, id, email, gitHub);
-            return newEngineer;
             allEmployee.push(newEngineer);
+            return newEngineer;
           });
       } else if (role === "Intern") {
         inquirer
@@ -81,8 +82,8 @@ function begin() {
           .then(function({ school }) {
             startOver();
             const newIntern = new Intern(name, id, email, school);
-            return newIntern;
             allEmployee.push(newIntern);
+            return newIntern;
           });
       } else {
         console.log("only one manager is allowed");
@@ -105,6 +106,9 @@ function startOver() {
       if (answer === "Yes") {
         begin();
       } else {
+        const html = render(allEmployee);
+
+        fs.writeFileSync("./templates/profile.html", html, "utf-8");
         console.log("Thank you for using our application");
       }
     });
