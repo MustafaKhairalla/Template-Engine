@@ -85,7 +85,8 @@ function begin() {
             allEmployee.push(newIntern);
           });
       } else {
-        console.log("You can't anyone right now");
+        console.log("only one manager is allowed");
+        startOver();
       }
     });
 }
